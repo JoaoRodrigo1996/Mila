@@ -1,4 +1,4 @@
-import { ArrowDownRight, Ellipsis, Plus } from "lucide-react";
+import { ArrowDownRight, Ellipsis, Plus, X } from "lucide-react";
 import { faker } from '@faker-js/faker'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -9,18 +9,19 @@ import { Table } from "./components/table/table";
 import { TableRow } from "./components/table/table-row";
 import { TableCell } from "./components/table/table-cell";
 import { Button } from "./components/button";
+import { data } from "./data";
+import { useState } from "react";
 
 export function App() {
-  const data = Array.from({ length: 10 }, () => {
-    return (
-      {
-        data: faker.date.anytime().toISOString(),
-        value: faker.number.int({ min: 0, max: 1000 }),
-        insulin: faker.number.int({ min: 2, max: 100 }),
-        status: faker.lorem.word()
-      }  
-    )
-  })
+  const [isCreateRegisterModalOpen, setIsCreateRegisterModalOpen] = useState(false)
+
+  function openCreateRegisterModal(){
+    setIsCreateRegisterModalOpen(true)
+  }
+
+  function closeCreateRegisterModal(){
+    setIsCreateRegisterModalOpen(false)
+  }
 
   return (
     <div className='max-w-5xl mx-auto py-5 flex flex-col gap-5'>
@@ -29,30 +30,30 @@ export function App() {
       <main className="flex flex-col gap-4">
         <section className="flex items-center justify-between">
           <h2 className="text-2xl font-bold tracking-wide">Visão geral</h2>
-          <Button>
+          <Button onClick={openCreateRegisterModal}>
             Novo registro
             <Plus className='size-4' />
           </Button>
         </section>
 
         <section className="flex gap-3">
-          <div className="space-y-4 border px-4 py-3 border-zinc-800 rounded-lg">
-            <div className="flex flex-col gap-1">
-              <span className="text-zinc-400 tracking-wider">Último registro</span>
-              <span className="text-sm font-medium text-zinc-400 tracking-wider">{format(faker.date.anytime().toISOString(), "dd' de 'LLLL' - 'hh':'mm", { locale: ptBR })}h</span>
+          <div className="space-y-4 border p-6 border-zinc-800 rounded-lg">
+            <div className="flex flex-col">
+              <span className="text-sm text-zinc-400 tracking-wider">Último registro</span>
+              <span className="text-xs font-medium text-zinc-400 tracking-wider">{format(faker.date.anytime().toISOString(), "dd' de 'LLLL' - 'hh':'mm", { locale: ptBR })}h</span>
             </div>
             <div className="flex gap-1">
-              <h4 className="font-semibold text-3xl">124</h4>
+              <span className="font-semibold text-3xl">124</span>
               <ArrowDownRight className='size-4 text-emerald-400' />
             </div>
           </div>
 
-          <div className="space-y-4 border px-4 py-3 border-zinc-800 rounded-lg">
-            <div className="flex flex-col gap-1">
-              <span className="text-zinc-400 tracking-wider">Gráfico glicemico</span>
-              <span className="text-sm font-medium text-zinc-400 tracking-wider">Todos os registros</span>
+          <div className="space-y-4 border p-6 border-zinc-800 rounded-lg">
+            <div className="flex flex-col">
+              <span className="text-sm text-zinc-400 tracking-wider">Gráfico glicemico</span>
+              <span className="text-xs font-medium text-zinc-400 tracking-wider">Todos os registros</span>
             </div>
-            <LineChart width={186} height={60} data={data}>
+            <LineChart width={200} height={60} data={data}>
               <Line type='monotone' dataKey="value" stroke="#22d3ee" />
               <Tooltip 
                 itemStyle={{ fontSize: '14px', color: 'white' }} 
@@ -88,7 +89,7 @@ export function App() {
               Array.from({ length: 10 }, () => {
                 return (
                   <TableRow key={Math.random()}>
-                    <TableCell>{faker.date.anytime().toISOString()}</TableCell>
+                    <TableCell>{format(faker.date.anytime().toISOString(), "dd' de 'LLLL' - 'hh':'mm", { locale: ptBR })}h</TableCell>
                     <TableCell>{faker.number.int({ min: 0, max: 1000 })}</TableCell>
                     <TableCell>{faker.number.int({ min: 2, max: 100 })}UI</TableCell>
                     <TableCell>{faker.lorem.word()}</TableCell>
@@ -104,6 +105,37 @@ export function App() {
           </tbody>
         </Table>
       </main>
+      {
+        isCreateRegisterModalOpen && (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+            <div className="w-[640px] space-y-5 rounded-2xl py-5 px-6 shadow-lg bg-zinc-950">
+              <div className="">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold tracking-wide">Criar novo registro</h2>
+                  <Button onClick={closeCreateRegisterModal} variant='icon' size='icon'>
+                    <X className='size-5 text-zinc-400' />
+                  </Button>
+                </div>
+                <p className="text-sm text-zinc-400 ">
+                  Digite as informações pedidas abaixo e comece a criar seu histórico.
+                </p>
+              </div>
+
+              <form className="space-y-4">
+                <fieldset className='flex flex-col space-y-2'>
+                  <label htmlFor="" className='text-sm text-zinc-200 font-medium tracking-wide'>Taxa glicemica</label>
+                  <input type="text" className='bg-zinc-900 px-4 py-2 rounded-lg' placeholder="125" />
+                </fieldset>
+                <fieldset className='flex flex-col space-y-2'>
+                  <label htmlFor="" className='text-sm text-zinc-200 font-medium tracking-wide'>quantidade de insulina aplicada (ui)</label>
+                  <input type="text" className='bg-zinc-900 px-4 py-2 rounded-lg' placeholder="16" />
+                </fieldset>
+                <Button type='submit' size='full'>Registrar</Button>
+              </form>
+            </div>
+          </div>
+        )
+      }
     </div> 
   )
 }
