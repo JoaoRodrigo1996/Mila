@@ -4,6 +4,10 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { LineChart, Line, Tooltip } from 'recharts'
 import { Header } from "./components/header";
+import { TableHeader } from "./components/table/table-header";
+import { Table } from "./components/table/table";
+import { TableRow } from "./components/table/table-row";
+import { TableCell } from "./components/table/table-cell";
 
 export function App() {
   const data = Array.from({ length: 10 }, () => {
@@ -68,38 +72,36 @@ export function App() {
           
         </section>
 
-        <section className="border border-zinc-800 rounded-lg">
-          <table className='w-full text-left'>
-            <thead className='border-b border-b-zinc-800'>
-              <tr>
-                <th className='py-3 px-4 text-sm font-semibold text-left'>Data</th>
-                <th className='py-3 px-4 text-sm font-semibold text-left'>Taxa glicêmica</th>
-                <th className='py-3 px-4 text-sm font-semibold text-left'>Quantidade de insulina aplicada</th>
-                <th className='py-3 px-4 text-sm font-semibold text-left'>Estado</th>
-                <th className='py-3 px-4 text-sm font-semibold text-left'></th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                Array.from({ length: 10 }, () => {
-                  return (
-                    <tr key={Math.random()} className='hover:bg-white/5'>
-                      <td className='py-3 px-4 text-sm text-zinc-300'>{faker.date.anytime().toISOString()}</td>
-                      <td className='py-3 px-4 text-sm text-zinc-300'>{faker.number.int({ min: 0, max: 1000 })}</td>
-                      <td className='py-3 px-4 text-sm text-zinc-300'>{faker.number.int({ min: 2, max: 100 })}UI</td>
-                      <td className='py-3 px-4 text-sm text-zinc-300'>{faker.lorem.word()}</td>
-                      <td className='py-3 px-4 text-sm text-zinc-300'>
-                        <button className="hover:bg-zinc-950 p-2.5 rounded-xl">
-                          <Ellipsis className='size-4' />
-                        </button>
-                      </td>
-                    </tr>
-                  )
-                })
-              }
-            </tbody>
-          </table>
-        </section>
+        <Table>
+          <thead className='border-b border-b-zinc-800'>
+            <tr>
+              <TableHeader>Data</TableHeader>
+              <TableHeader>Taxa glicêmica</TableHeader>
+              <TableHeader>Quantidade de insulina aplicada</TableHeader>
+              <TableHeader>Estado</TableHeader>
+              <TableHeader></TableHeader>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              Array.from({ length: 10 }, () => {
+                return (
+                  <TableRow key={Math.random()}>
+                    <TableCell>{faker.date.anytime().toISOString()}</TableCell>
+                    <TableCell>{faker.number.int({ min: 0, max: 1000 })}</TableCell>
+                    <TableCell>{faker.number.int({ min: 2, max: 100 })}UI</TableCell>
+                    <TableCell>{faker.lorem.word()}</TableCell>
+                    <TableCell>
+                      <button className="hover:bg-zinc-950 p-2.5 rounded-xl">
+                        <Ellipsis className='size-4' />
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            }
+          </tbody>
+        </Table>
       </main>
     </div> 
   )
