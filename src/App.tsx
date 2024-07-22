@@ -59,8 +59,13 @@ export function App() {
               <span className="text-xs text-zinc-400 tracking-wider">Todos os registros</span>
             </CardHeader>
             <CardContent>
-              <LineChart width={200} height={60} data={data}>
-                <Line type='monotone' dataKey="value" stroke="#22d3ee" />
+              <LineChart layout="horizontal" width={200} height={60} data={data}>
+                <Line 
+                  type='monotone' 
+                  dataKey="value" 
+                  stroke="#22d3ee" 
+                  dot={{ stroke: '#22d3ee', strokeWidth: 2, fill: '#22d3ee' }}
+                />
                 <Tooltip 
                   itemStyle={{ fontSize: '14px', color: 'white' }} 
                   labelStyle={{ fontSize: '18px', color: '#a1a1aa' }}
