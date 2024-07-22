@@ -11,6 +11,9 @@ import { TableCell } from "./components/table/table-cell";
 import { Button } from "./components/button";
 import { data } from "./data";
 import { useState } from "react";
+import { Card } from "./components/card/card";
+import { CardHeader } from "./components/card/card-header";
+import { CardContent } from "./components/card/card-content";
 
 export function App() {
   const [isCreateRegisterModalOpen, setIsCreateRegisterModalOpen] = useState(false)
@@ -37,40 +40,44 @@ export function App() {
         </section>
 
         <section className="flex gap-3">
-          <div className="space-y-4 border p-6 border-zinc-800 rounded-lg">
-            <div className="flex flex-col">
-              <span className="text-sm text-zinc-400 tracking-wider">Último registro</span>
-              <span className="text-xs font-medium text-zinc-400 tracking-wider">{format(faker.date.anytime().toISOString(), "dd' de 'LLLL' - 'hh':'mm", { locale: ptBR })}h</span>
-            </div>
-            <div className="flex gap-1">
-              <span className="font-semibold text-3xl">124</span>
-              <ArrowDownRight className='size-4 text-emerald-400' />
-            </div>
-          </div>
+          <Card>
+            <CardHeader>
+              <span className="text-sm text-zinc-400 tracking-wider font-medium">Último registro</span>
+              <span className="text-xs text-zinc-400 tracking-wider">{format(faker.date.anytime().toISOString(), "dd' de 'LLLL' - 'hh':'mm", { locale: ptBR })}h</span>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-1">
+                <span className="font-bold text-3xl">124</span>
+                <ArrowDownRight className='size-4 text-emerald-400' />
+              </div>
+            </CardContent>
+          </Card>
 
-          <div className="space-y-4 border p-6 border-zinc-800 rounded-lg">
-            <div className="flex flex-col">
-              <span className="text-sm text-zinc-400 tracking-wider">Gráfico glicemico</span>
-              <span className="text-xs font-medium text-zinc-400 tracking-wider">Todos os registros</span>
-            </div>
-            <LineChart width={200} height={60} data={data}>
-              <Line type='monotone' dataKey="value" stroke="#22d3ee" />
-              <Tooltip 
-                itemStyle={{ fontSize: '14px', color: 'white' }} 
-                labelStyle={{ fontSize: '18px', color: '#a1a1aa' }}
-                contentStyle={{ 
-                  backgroundColor: '#27272a',
-                  borderRadius: '12px',
-                  border: 0,
-                  paddingLeft: '16px',
-                  paddingRight: '16px',
-                  paddingTop: '12px',
-                  paddingBottom: '12px',
-                }}
-                isAnimationActive
-              />
-            </LineChart>
-          </div>
+          <Card>
+            <CardHeader>
+              <span className="text-sm text-zinc-400 tracking-wider font-medium">Gráfico glicemico</span>
+              <span className="text-xs text-zinc-400 tracking-wider">Todos os registros</span>
+            </CardHeader>
+            <CardContent>
+              <LineChart width={200} height={60} data={data}>
+                <Line type='monotone' dataKey="value" stroke="#22d3ee" />
+                <Tooltip 
+                  itemStyle={{ fontSize: '14px', color: 'white' }} 
+                  labelStyle={{ fontSize: '18px', color: '#a1a1aa' }}
+                  contentStyle={{ 
+                    backgroundColor: '#27272a',
+                    borderRadius: '12px',
+                    border: 0,
+                    paddingLeft: '16px',
+                    paddingRight: '16px',
+                    paddingTop: '12px',
+                    paddingBottom: '12px',
+                  }}
+                  isAnimationActive
+                />
+              </LineChart>
+            </CardContent>
+          </Card>
           
         </section>
 
