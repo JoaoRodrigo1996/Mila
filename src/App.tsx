@@ -8,6 +8,7 @@ import { TableHeader } from "./components/table/table-header";
 import { Table } from "./components/table/table";
 import { TableRow } from "./components/table/table-row";
 import { TableCell } from "./components/table/table-cell";
+import { Button } from "./components/button";
 
 export function App() {
   const data = Array.from({ length: 10 }, () => {
@@ -28,10 +29,10 @@ export function App() {
       <main className="flex flex-col gap-4">
         <section className="flex items-center justify-between">
           <h2 className="text-2xl font-bold tracking-wide">Visão geral</h2>
-          <button className="flex items-center gap-2 bg-cyan-400 px-4 py-2 rounded-lg text-zinc-950 font-medium text-sm">
+          <Button>
             Novo registro
             <Plus className='size-4' />
-          </button>
+          </Button>
         </section>
 
         <section className="flex gap-3">
@@ -92,9 +93,9 @@ export function App() {
                     <TableCell>{faker.number.int({ min: 2, max: 100 })}UI</TableCell>
                     <TableCell>{faker.lorem.word()}</TableCell>
                     <TableCell>
-                      <button className="hover:bg-zinc-950 p-2.5 rounded-xl">
+                      <Button size="icon" variant="icon">
                         <Ellipsis className='size-4' />
-                      </button>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 )
