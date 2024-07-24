@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { ArrowDownRight, Ellipsis, Plus, UserRoundX } from "lucide-react";
 import { faker } from '@faker-js/faker'
 import { format } from 'date-fns'
@@ -16,6 +16,7 @@ import { Table } from "../../components/table/table";
 import { data } from "../../data";
 import { useStore } from "../../store/auth";
 import { CreateRegisterModal } from "./create-register-modal";
+import { api } from "../../lib/axios";
 
 export function Dashboard() {
   const { isLoggedIn } = useStore((store) => {
@@ -25,6 +26,8 @@ export function Dashboard() {
   })
 
   const [isCreateRegisterModalOpen, setIsCreateRegisterModalOpen] = useState(false)
+  const [rate, setRate] = useState('')
+  const [quantity, setQuantity] = useState('')
 
   function openCreateRegisterModal(){
     setIsCreateRegisterModalOpen(true)
@@ -33,6 +36,26 @@ export function Dashboard() {
   function closeCreateRegisterModal(){
     setIsCreateRegisterModalOpen(false)
   }
+
+  async function createRegister(event: FormEvent<HTMLFormElement>){
+    event.preventDefault()
+
+    await api.post('/glycemic', {
+      rate,
+      quantity,
+      date: new Date()
+    })
+  }
+
+  async function fetchGlycemic(){
+    const response = await api.get('/glycemic')
+
+    console.log(response.data)
+  }
+
+  useEffect(()=>{
+    fetchGlycemic()
+  }, [])
 
   return (
     <>
@@ -139,7 +162,12 @@ export function Dashboard() {
       }
       {
         isCreateRegisterModalOpen && (
-          <CreateRegisterModal closeCreateRegisterModal={closeCreateRegisterModal} />
+          <CreateRegisterModal 
+            closeCreateRegisterModal={closeCreateRegisterModal}
+            createRegister={createRegister}
+            setRate={setRate}
+            setQuantity={setQuantity}            
+          />
         )
       }
     </>

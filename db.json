@@ -1,4 +1,11 @@
 {
-  "glycemic": {},
+  "glycemic": [
+    {
+      "id": "b7f2",
+      "rate": "130",
+      "quantity": "15",
+      "date": "2024-07-24T21:24:57.729Z"
+    }
+  ],
   "patient": {}
 }
