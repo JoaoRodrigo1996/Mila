@@ -8,10 +8,10 @@ const buttonVariant = tv({
     variant: {
       primary: 'bg-cyan-400',
       secondary: 'bg-zinc-900',
-      icon: 'bg-transparent'
+      icon: 'bg-zinc-950 border border-zinc-800 '
     },
     size: {
-      icon: 'text-white hover:bg-zinc-950 p-2.5 rounded-xl',
+      icon: 'text-white p-2.5 rounded-xl',
       default: 'px-4 py-2 text-sm',
       full: 'w-full h-11'
     }

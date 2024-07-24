@@ -1,6 +1,7 @@
-import { Bell, LogIn } from "lucide-react";
+import { ChevronDown, LogIn } from "lucide-react";
 import { Button } from "./button";
 import { useStore } from "../store/auth";
+import { NavLink } from "react-router-dom";
 
 export function Header(){
   const { isLoggedIn, logIn } = useStore((store) => {
@@ -14,29 +15,48 @@ export function Header(){
     <header className="h-12 flex items-center justify-between">
       <div className="flex items-center gap-5">
         <img src="/logo.svg" alt="" className="" />
-        <menu className="flex itemce gap-5">
-          <li><a href="/" className="text-sm text-zinc-400 focus:underline focus:underline-offset-4 focus:text-zinc-100 hover:text-zinc-100 hover:underline hover:underline-offset-4 transition-colors">Página inicial</a></li>
-          <li><a href="/history" className="text-sm text-zinc-400 focus:underline focus:underline-offset-4 focus:text-zinc-100 hover:text-zinc-100 hover:underline hover:underline-offset-4 transition-colors">Histórico</a></li>
-        </menu>
+        {
+          isLoggedIn && (
+            <menu className="flex itemce gap-5">
+              <NavLink 
+                to="/" 
+                className={({ isActive }) => 
+                  isActive 
+                    ? "text-sm text-zinc-100 underline underline-offset-4 transition-colors" 
+                    : "text-sm text-zinc-400 focus:underline focus:underline-offset-4 focus:text-zinc-100 hover:text-zinc-100 hover:underline hover:underline-offset-4 transition-colors"}
+              >
+                Página inicial
+              </NavLink>
+              <NavLink 
+                to="/history" 
+                className={({ isActive }) => 
+                  isActive 
+                    ? "text-sm text-zinc-100 underline underline-offset-4 transition-colors" 
+                    : "text-sm text-zinc-400 focus:underline focus:underline-offset-4 focus:text-zinc-100 hover:text-zinc-100 hover:underline hover:underline-offset-4 transition-colors"}
+              >
+                Histórico
+              </NavLink>
+            </menu>
+          )
+        }
       </div>
 
       {
         isLoggedIn ? (
           <div className="flex items-center gap-4">
-            <div className="flex items-center justify-center gap-3">
-              <button className='text-zinc-400 hover:text-zinc-100 transition-colors'>
-                <Bell className="size-5" />
-              </button>
-            </div>
-    
-            <div className="h-6 w-px bg-zinc-800" />
-    
-            <button className="size-8 rounded-full">
-              <img 
-                src="https://github.com/JoaoRodrigo1996.png" 
-                alt="Foto de perfil" 
-                className="size-8 rounded-full object-cover" 
-              />
+            <button className="group flex items-center gap-4">
+              <div className="flex flex-col items-end">
+                <span className="text-sm font-medium ">Rodrigo Mesquita</span>
+                <span className="text-sm text-zinc-400">dev.rodrigomesquita@gmail.com</span>
+              </div>
+              <div className="size-10 rounded-full">
+                <img 
+                  src="https://github.com/JoaoRodrigo1996.png" 
+                  alt="Foto de perfil" 
+                  className="size-10 rounded-full object-cover" 
+                />
+              </div>
+              <ChevronDown className='size-4 text-zinc-400 group-hover:text-zinc-50' />
             </button>
           </div>
         ) : (

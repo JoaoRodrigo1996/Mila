@@ -1,9 +1,10 @@
 import { ComponentProps } from "react";
+import { twMerge } from "tailwind-merge";
 
 interface TableCell extends ComponentProps<'td'> {}
 
-export function TableCell({...props}: TableCell){
+export function TableCell({className, ...props}: TableCell){
   return (
-    <td className='py-3 px-4 text-sm text-zinc-300' {...props}/>
+    <td className={twMerge('py-3 px-4 text-sm text-zinc-300', className)} {...props}/>
   )
 }
