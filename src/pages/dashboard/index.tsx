@@ -17,7 +17,7 @@ import { CreateRegisterModal } from "./create-register-modal";
 import { api } from "../../lib/axios";
 import { defineStatus } from "../../utils/define-status";
 
-interface DataProps {
+export interface DataProps {
   id: string
   rate: string
   quantity: string
