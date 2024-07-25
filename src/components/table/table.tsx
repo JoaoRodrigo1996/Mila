@@ -4,7 +4,7 @@ interface TableProps extends ComponentProps<'table'> {}
 
 export function Table({...props}: TableProps){
   return (
-    <section className="border border-zinc-800 rounded-lg">
+    <section className="border-y border-zinc-800">
       <table className='w-full' {...props} />
     </section>
   )
