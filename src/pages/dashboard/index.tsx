@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { ArchiveX, ArrowDownRight, Ellipsis, Plus, UserRoundX } from "lucide-react";
 import { faker } from '@faker-js/faker'
 import { format } from 'date-fns'
@@ -12,10 +12,10 @@ import { TableCell } from "../../components/table/table-cell";
 import { TableHeader } from "../../components/table/table-header";
 import { TableRow } from "../../components/table/table-row";
 import { Table } from "../../components/table/table";
-import { useStore } from "../../store/auth";
 import { CreateRegisterModal } from "./create-register-modal";
 import { api } from "../../lib/axios";
 import { defineStatus } from "../../utils/define-status";
+import { useAuth } from "@clerk/clerk-react";
 
 export interface DataProps {
   id: string
@@ -25,11 +25,8 @@ export interface DataProps {
 }
 
 export function Dashboard() {
-  const { isLoggedIn } = useStore((store) => {
-    return {
-      isLoggedIn: store.isLoggedIn
-    }
-  })
+  const { isSignedIn } = useAuth()
+
 
   const [isCreateRegisterModalOpen, setIsCreateRegisterModalOpen] = useState(false)
   const [data, setDate] = useState<DataProps[]>([])
@@ -44,7 +41,7 @@ export function Dashboard() {
     setIsCreateRegisterModalOpen(false)
   }
 
-  async function createRegister(event: FormEvent<HTMLFormElement>){
+  const createRegister = useCallback(async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     await api.post('/glycemic', {
@@ -52,22 +49,24 @@ export function Dashboard() {
       quantity,
       date: new Date()
     })
-  }
 
-  async function fetchGlycemic(){
+    window.document.location.reload()
+  }, [rate, quantity])
+
+  const fetchGlycemic = useCallback(async () => {
     const response = await api.get('/glycemic')
 
     setDate(response.data)
-  }
+  }, [])
 
   useEffect(()=>{
     fetchGlycemic()
-  }, [])
+  },[fetchGlycemic])
 
   return (
     <>    
       {
-        isLoggedIn ? (
+        isSignedIn ? (
           <main className="flex flex-col gap-4">
             <section className="flex items-center justify-between">
               <h2 className="text-2xl font-bold tracking-wide">Visão geral</h2>

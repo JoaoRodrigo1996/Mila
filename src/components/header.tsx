@@ -1,22 +1,18 @@
 import { ChevronDown, LogIn } from "lucide-react";
+import { SignInButton, useAuth } from "@clerk/clerk-react";
+
 import { Button } from "./button";
-import { useStore } from "../store/auth";
 import { NavLink } from "react-router-dom";
 
 export function Header(){
-  const { isLoggedIn, logIn } = useStore((store) => {
-    return {
-      isLoggedIn: store.isLoggedIn,
-      logIn: store.logIn,
-    }
-  })
+  const { isSignedIn } = useAuth()
 
   return (
     <header className="h-12 flex items-center justify-between">
       <div className="flex items-center gap-5">
         <img src="/logo.svg" alt="" className="" />
         {
-          isLoggedIn && (
+          isSignedIn && (
             <menu className="flex itemce gap-5">
               <NavLink 
                 to="/" 
@@ -42,7 +38,7 @@ export function Header(){
       </div>
 
       {
-        isLoggedIn ? (
+        isSignedIn ? (
           <div className="flex items-center gap-4">
             <button className="group flex items-center gap-4">
               <div className="flex flex-col items-end">
@@ -60,10 +56,12 @@ export function Header(){
             </button>
           </div>
         ) : (
-          <Button onClick={logIn}>
-            Fazer log in
-            <LogIn className='size-4' />
-          </Button>
+          <SignInButton>
+            <Button>
+              Fazer log in
+              <LogIn className='size-4' />
+            </Button>
+          </SignInButton>
         )
       }
 
