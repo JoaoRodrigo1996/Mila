@@ -1,4 +1,4 @@
-import { ChevronDown, LogIn, LogOut, Settings } from "lucide-react";
+import { ChevronDown, LogIn, LogOut } from "lucide-react";
 import { SignInButton, SignOutButton, useUser } from "@clerk/clerk-react";
 
 import { Button } from "./button";
@@ -58,7 +58,7 @@ export function Header(){
             </button>
             {
               isDropdownMenuOpen && (
-                <div className="px-5 py-3 space-y-4 rounded-lg shadow-lg absolute -bottom-32 -left-60 w-[320px] bg-zinc-900">
+                <div className="px-5 py-3 space-y-4 rounded-lg shadow-lg absolute -bottom-36 -left-60 w-[320px] bg-zinc-900">
                   <div className="flex gap-2">
                     <img 
                       src={user.imageUrl} 
@@ -73,16 +73,12 @@ export function Header(){
 
                   <div className="w-full h-px bg-zinc-700" />
 
-                  <div className="flex  items-center justify-between">
-                    <button className="bg-zinc-700 text-sm flex items-center gap-2 px-6 py-1 rounded-lg hover:bg-zinc-800 transition-colors" >
-                      Configurações
-                      <Settings className="size-4" />
-                    </button>
+                  <div className="flex items-center justify-between">
                     <SignOutButton>
-                      <button className="bg-zinc-700 text-sm flex items-center gap-2 px-6 py-1 rounded-lg hover:bg-zinc-800 transition-colors" >
+                      <Button variant='secondary' size='sm' className="ml-auto">
                         Sair
                         <LogOut className="size-4" />
-                      </button>
+                      </Button>
                     </SignOutButton>
                   </div>
                 </div>
@@ -90,15 +86,14 @@ export function Header(){
             }
           </div>
         ) : (
-          <SignInButton>
-            <Button>
-              Fazer log in
+          <SignInButton mode="modal">
+            <Button size='sm'>
+              Entrar com o Google
               <LogIn className='size-4' />
             </Button>
           </SignInButton>
         )
       }
-
     </header>
   )
 }

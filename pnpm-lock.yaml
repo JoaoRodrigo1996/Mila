@@ -11,6 +11,12 @@ importers:
       '@clerk/clerk-react':
         specifier: ^5.2.10
         version: 5.2.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@clerk/localizations':
+        specifier: ^2.5.2
+        version: 2.5.2
+      '@clerk/themes':
+        specifier: ^2.1.14
+        version: 2.1.14
       axios:
         specifier: ^1.7.2
         version: 1.7.2
@@ -212,6 +218,10 @@ packages:
       react: '>=18 || >=19.0.0-beta'
       react-dom: '>=18 || >=19.0.0-beta'
 
+  '@clerk/localizations@2.5.2':
+    resolution: {integrity: sha512-3zX5dolhx5+6AdbUBtau+AY/7XjUwpl0iL2dnTf9luq/XcxftZTgPxZdN6fQZLWRd8q/IEVPSkhOrYrHgUJADA==}
+    engines: {node: '>=18.17.0'}
+
   '@clerk/shared@2.4.1':
     resolution: {integrity: sha512-sApuz6hDRIai4Jwo/fBcihX74+DdrKLt08LkEVrooh/7zc0ipDOSGlqmAy15yNuKPaxpemp/9nW4T8gq6uIr9Q==}
     engines: {node: '>=18.17.0'}
@@ -223,6 +233,10 @@ packages:
         optional: true
       react-dom:
         optional: true
+
+  '@clerk/themes@2.1.14':
+    resolution: {integrity: sha512-j0nZ7cDmn5XBWg/bx8msvlPnoNZCTb6ovfhldvCxy0/VVn6v1zDwSgJM3hVVPKwdM20tNNMvhWrseS4248jgTg==}
+    engines: {node: '>=18.17.0'}
 
   '@clerk/types@4.9.1':
     resolution: {integrity: sha512-fCmqzPBFh0rH9TlUVPpvPW225DtGJDuCv5GecwuuzD8hcgwGetTfRSDRNl5Dub5aJuqYWGQQCCnKfnfCrhZvrA==}
@@ -2039,6 +2053,10 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       tslib: 2.4.1
 
+  '@clerk/localizations@2.5.2':
+    dependencies:
+      '@clerk/types': 4.9.1
+
   '@clerk/shared@2.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@clerk/types': 4.9.1
@@ -2049,6 +2067,11 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
+
+  '@clerk/themes@2.1.14':
+    dependencies:
+      '@clerk/types': 4.9.1
+      tslib: 2.4.1
 
   '@clerk/types@4.9.1':
     dependencies:
