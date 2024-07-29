@@ -11,54 +11,6 @@ import { Area, AreaChart, CartesianGrid, Tooltip } from "recharts"
 import { api } from "../../lib/axios"
 import { defineStatus } from "../../utils/define-status"
 
-// const dataG = [
-//   {
-//     date: "2024-07-24T21:24:57.729Z",
-//     rate: 120,
-//     quantity: 16,    
-//   },
-//   {
-//     date: "2024-07-24T21:24:57.729Z",
-//     rate: 152,
-//     quantity: 16,
-//   },
-//   {
-//     date: "2024-07-24T21:24:57.729Z",
-//     rate: 92,
-//     quantity: 16,
-//   },
-//   {
-//     date: "2024-07-24T21:24:57.729Z",
-//     rate: 180,
-//     quantity: 16,
-//   },
-//   {
-//     date: "2024-07-24T21:24:57.729Z",
-//     rate: 144,
-//     quantity: 16,
-//   },
-//   {
-//     date: "2024-07-24T21:24:57.729Z",
-//     rate: 210,
-//     quantity: 16,
-//   },
-//   {
-//     date: "2024-07-24T21:24:57.729Z",
-//     rate: 160,
-//     quantity: 16,
-//   },
-//   {
-//     date: "2024-07-24T21:24:57.729Z",
-//     rate: 103,
-//     quantity: 16,
-//   },
-//   {
-//     date: "2024-07-24T21:24:57.729Z",
-//     rate: 60,
-//     quantity: 16,
-//   },
-// ]
-
 interface DataProps {
   date: string,
   rate: string,
@@ -91,7 +43,7 @@ export function History(){
     <main className="flex flex-col gap-4">
       <section className="flex items-center justify-between">
         <h2 className="text-2xl font-bold tracking-wide">Histórico</h2>
-        <Button onClick={openGraphicModal}>
+        <Button size='sm' onClick={openGraphicModal}>
           Ver gráfico
           <BarChart className='size-4' />
         </Button>
@@ -129,7 +81,7 @@ export function History(){
                   </span>
                   </TableCell>
                   <TableCell>
-                    <Button size="icon" variant="icon">
+                    <Button size="icon" variant="tertiary">
                       <Ellipsis className='size-4' />
                     </Button>
                   </TableCell>
@@ -143,16 +95,16 @@ export function History(){
               <div className="inline-flex items-center gap-8">
                 <span className="">Página 1 de 100</span>
                 <div className="flex gap-1.5">
-                  <Button variant='icon' size='icon' >
+                  <Button variant='tertiary' size='icon' >
                     <ChevronsLeft className="size-4"/>
                   </Button>
-                  <Button variant='icon' size='icon' >
+                  <Button variant='tertiary' size='icon' >
                     <ChevronLeft className="size-4"/>
                   </Button>
-                  <Button variant='icon' size='icon' >
+                  <Button variant='tertiary' size='icon' >
                     <ChevronRight className="size-4"/>
                   </Button>
-                  <Button variant='icon' size='icon' >
+                  <Button variant='tertiary' size='icon' >
                     <ChevronsRight className="size-4"/>
                   </Button>
                 </div>
@@ -168,8 +120,8 @@ export function History(){
               <div className="">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-semibold tracking-wide">Gráfico glicêmico</h2>
-                  <Button onClick={closeGraphicModal} variant='icon' size='icon'>
-                    <X className='size-5 text-zinc-400' />
+                  <Button onClick={closeGraphicModal} variant='tertiary' size='icon'>
+                    <X className='size-4 text-zinc-400' />
                   </Button>
                 </div>
                 <p className="text-sm text-zinc-400 ">

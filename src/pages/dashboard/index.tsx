@@ -70,9 +70,9 @@ export function Dashboard() {
           <main className="flex flex-col gap-4">
             <section className="flex items-center justify-between">
               <h2 className="text-2xl font-bold tracking-wide">Visão geral</h2>
-              <Button onClick={openCreateRegisterModal}>
+              <Button size='sm' onClick={openCreateRegisterModal}>
                 Novo registro
-                <Plus className='size-4' />
+                <Plus className='size-3' />
               </Button>
             </section>
 
@@ -126,7 +126,7 @@ export function Dashboard() {
                               </span>
                             </TableCell>
                             <TableCell>
-                              <Button size="icon" variant="icon">
+                              <Button size="icon" variant="tertiary">
                                 <Ellipsis className='size-4' />
                               </Button>
                             </TableCell>
@@ -160,7 +160,7 @@ export function Dashboard() {
             </div>
           </main>
         )
-      }
+      }      
       {
         isCreateRegisterModalOpen && (
           <CreateRegisterModal 

@@ -16,8 +16,8 @@ export function CreateRegisterModal({ closeCreateRegisterModal, setQuantity, set
         <div className="">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold tracking-wide">Criar novo registro</h2>
-            <Button onClick={closeCreateRegisterModal} variant='icon' size='icon'>
-              <X className='size-5 text-zinc-400' />
+            <Button onClick={closeCreateRegisterModal} variant='tertiary' size='icon'>
+              <X className='size-4 text-zinc-400' />
             </Button>
           </div>
           <p className="text-sm text-zinc-400 ">
@@ -48,7 +48,7 @@ export function CreateRegisterModal({ closeCreateRegisterModal, setQuantity, set
               placeholder="16" 
             />
           </fieldset>
-          <Button type='submit' size='full'>Registrar</Button>
+          <Button type='submit' className="w-full" size='md'>Registrar</Button>
         </form>
       </div>
     </div>
