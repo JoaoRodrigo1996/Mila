@@ -1,11 +1,17 @@
-import { ChevronDown, LogIn } from "lucide-react";
-import { SignInButton, useAuth } from "@clerk/clerk-react";
+import { ChevronDown, LogIn, LogOut, Settings } from "lucide-react";
+import { SignInButton, SignOutButton, useUser } from "@clerk/clerk-react";
 
 import { Button } from "./button";
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
 
 export function Header(){
-  const { isSignedIn } = useAuth()
+  const { isSignedIn, user } = useUser()
+  const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false)
+
+  function toggleDropdownMenu(){
+    setIsDropdownMenuOpen(state =>! state)
+  }
 
   return (
     <header className="h-12 flex items-center justify-between">
@@ -39,21 +45,49 @@ export function Header(){
 
       {
         isSignedIn ? (
-          <div className="flex items-center gap-4">
-            <button className="group flex items-center gap-4">
-              <div className="flex flex-col items-end">
-                <span className="text-sm font-medium ">Rodrigo Mesquita</span>
-                <span className="text-sm text-zinc-400">dev.rodrigomesquita@gmail.com</span>
-              </div>
+          <div className="relative flex items-center gap-4">
+            <button onClick={toggleDropdownMenu} className="group flex items-center gap-4">
               <div className="size-10 rounded-full">
                 <img 
-                  src="https://github.com/JoaoRodrigo1996.png" 
+                  src={user.imageUrl} 
                   alt="Foto de perfil" 
                   className="size-10 rounded-full object-cover" 
                 />
               </div>
               <ChevronDown className='size-4 text-zinc-400 group-hover:text-zinc-50' />
             </button>
+            {
+              isDropdownMenuOpen && (
+                <div className="px-5 py-3 space-y-4 rounded-lg shadow-lg absolute -bottom-32 -left-60 w-[320px] bg-zinc-900">
+                  <div className="flex gap-2">
+                    <img 
+                      src={user.imageUrl} 
+                      alt="Foto de perfil" 
+                      className="size-10 rounded-full object-cover" 
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">{user.fullName}</span>
+                      <span className="text-sm text-zinc-400">{user.emailAddresses.map(email => email.emailAddress)}</span>
+                    </div>
+                  </div>
+
+                  <div className="w-full h-px bg-zinc-700" />
+
+                  <div className="flex  items-center justify-between">
+                    <button className="bg-zinc-700 text-sm flex items-center gap-2 px-6 py-1 rounded-lg hover:bg-zinc-800 transition-colors" >
+                      Configurações
+                      <Settings className="size-4" />
+                    </button>
+                    <SignOutButton>
+                      <button className="bg-zinc-700 text-sm flex items-center gap-2 px-6 py-1 rounded-lg hover:bg-zinc-800 transition-colors" >
+                        Sair
+                        <LogOut className="size-4" />
+                      </button>
+                    </SignOutButton>
+                  </div>
+                </div>
+              )
+            }
           </div>
         ) : (
           <SignInButton>

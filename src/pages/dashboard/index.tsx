@@ -15,7 +15,7 @@ import { Table } from "../../components/table/table";
 import { CreateRegisterModal } from "./create-register-modal";
 import { api } from "../../lib/axios";
 import { defineStatus } from "../../utils/define-status";
-import { useAuth } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 
 export interface DataProps {
   id: string
@@ -25,7 +25,7 @@ export interface DataProps {
 }
 
 export function Dashboard() {
-  const { isSignedIn } = useAuth()
+  const { isSignedIn } = useUser()
 
 
   const [isCreateRegisterModalOpen, setIsCreateRegisterModalOpen] = useState(false)
