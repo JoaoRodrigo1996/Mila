@@ -6,21 +6,63 @@ import { TableCell } from "../../components/table/table-cell"
 import { TableHeader } from "../../components/table/table-header"
 import { TableRow } from "../../components/table/table-row"
 import { Table } from "../../components/table/table"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Area, AreaChart, CartesianGrid, Tooltip } from "recharts"
-import { api } from "../../lib/axios"
 import { defineStatus } from "../../utils/define-status"
-
-interface DataProps {
-  date: string,
-  rate: string,
-  quantity: string,
-}
+import { useQuery } from "@tanstack/react-query"
+import { RegistersProps } from "../dashboard"
+import { api } from "../../lib/axios"
 
 export function History(){
   const [isGraphicModalOpen, setIsGraphicModalOpen] = useState(false)
-  const [data, setData] = useState<DataProps[]>([])
 
+  const [page, setPage] = useState(() => {
+    const url = new URL(window.location.toString())
+
+    if(url.searchParams.has('page')){
+      return Number(url.searchParams.get('page'))
+    }
+
+    return 1
+  })
+
+  const [total, setTotal] = useState(0)
+  const totalPages = Math.ceil(total / 10)
+
+  function setCurrentPage(page: number){
+    const url = new URL(window.location.toString())
+
+    url.searchParams.set('page', String(page))
+    window.history.pushState({}, "", url)
+
+    setPage(page)
+  }
+
+  function goToNextpage(){
+    setCurrentPage(page + 1)
+  }
+
+  function goToPreviousPage(){
+    setCurrentPage(page - 1)
+  }
+
+  function goToFirstPage(){
+    setCurrentPage(1)
+  }
+
+  function goToLastPage(){
+    setCurrentPage(totalPages)
+  }
+
+  const { data } = useQuery<RegistersProps[]>({
+    queryKey: ['registers'],
+    queryFn: async () => {
+      const response = await api.get(`/glycemic?_sort=date&_order=desc&_page${page}`)
+      setTotal(response.data.length)
+      return response.data
+    }
+  })
+  
   function openGraphicModal(){
     setIsGraphicModalOpen(true)
   }
@@ -28,16 +70,6 @@ export function History(){
   function closeGraphicModal(){
     setIsGraphicModalOpen(false)
   }
-
-  async function fetchGlycemic(){
-    const response = await api.get('/glycemic')
-
-    setData(response.data)
-  }
-
-  useEffect(()=>{
-    fetchGlycemic()
-  }, [])
 
   return (
     <main className="flex flex-col gap-4">
@@ -61,7 +93,7 @@ export function History(){
           </thead>
           <tbody>
             {
-              data.map(glycemic => (
+              data?.map(glycemic => (
                 <TableRow key={Math.random()}>
                   <TableCell>{format(glycemic.date, "dd' de 'LLLL' - 'hh':'mm", { locale: ptBR })}h</TableCell>
                   <TableCell>{glycemic.rate}</TableCell>
@@ -90,21 +122,21 @@ export function History(){
             }
           </tbody>
           <tfoot>
-            <TableCell colSpan={3}>Mostrando 10 de 1000 registros</TableCell>
+            <TableCell colSpan={3}>Mostrando {data?.length} de {total} registros</TableCell>
             <TableCell className="text-right" colSpan={3}>
               <div className="inline-flex items-center gap-8">
-                <span className="">Página 1 de 100</span>
+                <span className="">Página {page} de {totalPages}</span>
                 <div className="flex gap-1.5">
-                  <Button variant='tertiary' size='icon' >
+                  <Button onClick={goToFirstPage} disabled={page === 1} variant='tertiary' size='icon' >
                     <ChevronsLeft className="size-4"/>
                   </Button>
-                  <Button variant='tertiary' size='icon' >
+                  <Button onClick={goToPreviousPage} disabled={page === 1} variant='tertiary' size='icon' >
                     <ChevronLeft className="size-4"/>
                   </Button>
-                  <Button variant='tertiary' size='icon' >
+                  <Button onClick={goToNextpage} disabled={page === totalPages} variant='tertiary' size='icon' >
                     <ChevronRight className="size-4"/>
                   </Button>
-                  <Button variant='tertiary' size='icon' >
+                  <Button onClick={goToLastPage} disabled={page === totalPages} variant='tertiary' size='icon' >
                     <ChevronsRight className="size-4"/>
                   </Button>
                 </div>

@@ -1,8 +1,10 @@
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { ArchiveX, ArrowDownRight, Ellipsis, Plus, UserRoundX } from "lucide-react";
 import { faker } from '@faker-js/faker'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { useUser } from "@clerk/clerk-react";
+import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "../../components/button";
 import { Card } from "../../components/card/card";
@@ -15,9 +17,8 @@ import { Table } from "../../components/table/table";
 import { CreateRegisterModal } from "./create-register-modal";
 import { api } from "../../lib/axios";
 import { defineStatus } from "../../utils/define-status";
-import { useUser } from "@clerk/clerk-react";
 
-export interface DataProps {
+export interface RegistersProps {
   id: string
   rate: string
   quantity: string
@@ -25,13 +26,15 @@ export interface DataProps {
 }
 
 export function Dashboard() {
-  const { isSignedIn } = useUser()
-
-
+  const { isSignedIn, isLoaded } = useUser()
   const [isCreateRegisterModalOpen, setIsCreateRegisterModalOpen] = useState(false)
-  const [data, setDate] = useState<DataProps[]>([])
-  const [rate, setRate] = useState('')
-  const [quantity, setQuantity] = useState('')
+  const { data, isPending } = useQuery<RegistersProps[]>({
+    queryKey: ['registers'],
+    queryFn: async () => {
+      const response = await api.get('/glycemic?_sort=-date&_limit=5')
+      return response.data
+    }
+  })
 
   function openCreateRegisterModal(){
     setIsCreateRegisterModalOpen(true)
@@ -41,27 +44,11 @@ export function Dashboard() {
     setIsCreateRegisterModalOpen(false)
   }
 
-  const createRegister = useCallback(async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    await api.post('/glycemic', {
-      rate,
-      quantity,
-      date: new Date()
-    })
-
-    window.document.location.reload()
-  }, [rate, quantity])
-
-  const fetchGlycemic = useCallback(async () => {
-    const response = await api.get('/glycemic')
-
-    setDate(response.data)
-  }, [])
-
-  useEffect(()=>{
-    fetchGlycemic()
-  },[fetchGlycemic])
+  if(!isLoaded){
+    return (
+      <div className="">Carregando...</div>
+    )
+  }
 
   return (
     <>    
@@ -77,64 +64,73 @@ export function Dashboard() {
             </section>
 
             {
-              data.length >= 0 ? (
+              data && data.length >= 0 ? (
                 <>
-                  <section className="flex gap-3">
-                    <Card>
-                      <CardHeader>
-                        <span className="text-sm text-zinc-400 tracking-wider font-medium">Último registro</span>
-                        <span className="text-xs text-zinc-400 tracking-wider">{format(faker.date.anytime().toISOString(), "dd' de 'LLLL' - 'hh':'mm", { locale: ptBR })}h</span>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex gap-1">
-                          <span className="font-bold text-3xl">124</span>
-                          <ArrowDownRight className='size-4 text-emerald-400' />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </section>
+                  {
+                    isPending ? (
+                      <div className="">Carregando QUERY...</div>
+                    ) : (
 
-                  <Table>
-                    <thead className='border-b border-b-zinc-800'>
-                      <tr>
-                        <TableHeader>Data</TableHeader>
-                        <TableHeader>Taxa glicêmica</TableHeader>
-                        <TableHeader>Quantidade de insulina aplicada</TableHeader>
-                        <TableHeader>Estado</TableHeader>
-                        <TableHeader></TableHeader>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {
-                        data.map(glycemic => (
-                          <TableRow key={glycemic.id}>
-                            <TableCell>{format(glycemic.date, "dd' de 'LLLL' - 'hh':'mm", { locale: ptBR })}h</TableCell>
-                            <TableCell>{glycemic.rate}</TableCell>
-                            <TableCell>{glycemic.quantity}UI</TableCell>
-                            <TableCell>
-                              <span 
-                                className={
-                                  defineStatus(glycemic.rate) === 'BAIXO' 
-                                    ? 'py-1 px-2 rounded-xl text-[10px] font-semibold bg-red-950 text-red-300' 
-                                    : defineStatus(glycemic.rate) === 'NORMAL' 
-                                    ? 'py-1 px-2 rounded-xl text-[10px] font-semibold bg-emerald-950 text-emerald-300'
-                                    : 'py-1 px-2 rounded-xl text-[10px] font-semibold bg-yellow-950 text-yellow-300'
-                                    
-                                  }
-                              >
-                                {defineStatus(glycemic.rate)}
-                              </span>
-                            </TableCell>
-                            <TableCell>
-                              <Button size="icon" variant="tertiary">
-                                <Ellipsis className='size-4' />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      }
-                    </tbody>
-                  </Table>
+                      <>
+                        <section className="flex gap-3">
+                          <Card>
+                            <CardHeader>
+                              <span className="text-sm text-zinc-400 tracking-wider font-medium">Último registro</span>
+                              <span className="text-xs text-zinc-400 tracking-wider">{format(faker.date.anytime().toISOString(), "dd' de 'LLLL' - 'hh':'mm", { locale: ptBR })}h</span>
+                            </CardHeader>
+                            <CardContent>
+                              <div className="flex gap-1">
+                                <span className="font-bold text-3xl">124</span>
+                                <ArrowDownRight className='size-4 text-emerald-400' />
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </section>
+
+                        <Table>
+                          <thead className='border-b border-b-zinc-800'>
+                            <tr>
+                              <TableHeader>Data</TableHeader>
+                              <TableHeader>Taxa glicêmica</TableHeader>
+                              <TableHeader>Quantidade de insulina aplicada</TableHeader>
+                              <TableHeader>Estado</TableHeader>
+                              <TableHeader></TableHeader>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {
+                              data.map(glycemic => (
+                                <TableRow key={glycemic.date}>
+                                  <TableCell>{format(glycemic.date, "dd' de 'LLLL' - 'hh':'mm", { locale: ptBR })}h</TableCell>
+                                  <TableCell>{glycemic.rate}</TableCell>
+                                  <TableCell>{glycemic.quantity}UI</TableCell>
+                                  <TableCell>
+                                    <span 
+                                      className={
+                                        defineStatus(glycemic.rate) === 'BAIXO' 
+                                          ? 'py-1 px-2 rounded-xl text-[10px] font-semibold bg-red-950 text-red-300' 
+                                          : defineStatus(glycemic.rate) === 'NORMAL' 
+                                          ? 'py-1 px-2 rounded-xl text-[10px] font-semibold bg-emerald-950 text-emerald-300'
+                                          : 'py-1 px-2 rounded-xl text-[10px] font-semibold bg-yellow-950 text-yellow-300'
+                                          
+                                        }
+                                    >
+                                      {defineStatus(glycemic.rate)}
+                                    </span>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button size="icon" variant="tertiary">
+                                      <Ellipsis className='size-4' />
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            }
+                          </tbody>
+                        </Table>
+                      </>
+                    )
+                  }
                 </>
               ) : (
                 <main className='pt-32 flex items-center justify-center'>
@@ -165,9 +161,6 @@ export function Dashboard() {
         isCreateRegisterModalOpen && (
           <CreateRegisterModal 
             closeCreateRegisterModal={closeCreateRegisterModal}
-            createRegister={createRegister}
-            setRate={setRate}
-            setQuantity={setQuantity}            
           />
         )
       }
